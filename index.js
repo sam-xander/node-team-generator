@@ -9,52 +9,121 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./src/page-template.js");
+const team = [];
 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
+function validateInput(value) {
+  if (!value) {
+    return "This field is required.";
+  }
+  return true;
+}
 
 function generateManager() {
-  const managerInfo = {};
-
-  return inquirer
-    .prompt({
+  const prompts = [
+    {
       name: "name",
       message: "Please enter  the Team Manager's name.",
-    })
-    .then((data) => {
-      managerInfo.name = data.name;
+      validate: validateInput,
+    },
+    {
+      name: "id",
+      message: "Please enter their Employee ID.",
+      validate: validateInput,
+    },
+    {
+      name: "email",
+      message: "Please enter their Employee Email.",
+      validate: validateInput,
+    },
+    {
+      name: "officeNumber",
+      message: "Please enter their Office Number.",
+      validate: validateInput,
+    },
+  ];
 
-      inquirer
-        .prompt({
-          name: "id",
-          message: "Please enter their Employee ID.",
-        })
-        .then((data) => {
-          managerInfo.id = data.id;
+  return inquirer.prompt(prompts).then((data) => {
+    const manager = new Manager(
+      data.name,
+      data.id,
+      data.email,
+      data.officeNumber
+    );
+    team.push(manager);
 
-          inquirer
-            .prompt({
-              name: "email",
-              message: "Please enter their Employee Email.",
-            })
-            .then((data) => {
-              managerInfo.email = data.email;
+    console.log(`---\nSuccessfully added the Team Manager.\n---`);
 
-              inquirer
-                .prompt({
-                  name: "officeNumber",
-                  message: "Please enter their Office Number.",
-                })
-                .then((data) => {
-                  managerInfo.officeNumber = data.officeNumber;
+    showMainMenu();
+  });
+}
 
-                  const { name, id, email, officeNumber } = managerInfo;
+function generateEngineer() {
+  const prompts = [
+    {
+      name: "name",
+      message: "Please enter  the Engineer's name.",
+      validate: validateInput,
+    },
+    {
+      name: "id",
+      message: "Please enter their Employee ID.",
+      validate: validateInput,
+    },
+    {
+      name: "email",
+      message: "Please enter their Employee Email.",
+      validate: validateInput,
+    },
+    {
+      name: "github",
+      message: "Please enter their GitHub username.",
+      validate: validateInput,
+    },
+  ];
 
-                  const manager = new Manager(name, id, email, officeNumber);
-                  console.log(manager);
-                });
-            });
-        });
-    });
+  return inquirer.prompt(prompts).then((data) => {
+    const engineer = new Engineer(data.name, data.id, data.email, data.github);
+    team.push(engineer);
+
+    console.log(`---\nSuccessfully added an Engineer.\n---`);
+
+    showMainMenu();
+  });
+}
+
+function generateIntern() {
+  const prompts = [
+    {
+      name: "name",
+      message: "Please enter  the Intern's name.",
+      validate: validateInput,
+    },
+    {
+      name: "id",
+      message: "Please enter their Employee ID.",
+      validate: validateInput,
+    },
+    {
+      name: "email",
+      message: "Please enter their Employee Email.",
+      validate: validateInput,
+    },
+    {
+      name: "officeNumber",
+      message: "Please enter their School.",
+      validate: validateInput,
+    },
+  ];
+
+  return inquirer.prompt(prompts).then((data) => {
+    const intern = new Intern(data.name, data.id, data.email, data.school);
+    team.push(intern);
+
+    console.log(`---\nSuccessfully added an Intern.\n---`);
+
+    showMainMenu();
+  });
 }
 
 function showMainMenu() {
@@ -65,21 +134,30 @@ function showMainMenu() {
       message: "Please choose an option.",
       choices: [
         {
-          name: "create student",
-          value: "student",
+          name: "Add an Engineer",
+          value: "engineer",
         },
         {
-          name: "Exit the Course Manager",
+          name: "Add an Intern",
+          value: "intern",
+        },
+        {
+          name: "Finish building the team.",
           value: "exit",
         },
       ],
     })
     .then((choice) => {
-      if (choice.option === "student") return generateStudent();
+      if (choice.option === "engineer") return generateEngineer();
+      if (choice.option === "intern") return generateIntern();
 
-      console.log("Thanks for using our app!");
-      process.exit();
+      generatePage();
     });
+}
+
+function generatePage() {
+  render(team);
+  process.exit();
 }
 
 function init() {
