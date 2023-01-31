@@ -113,7 +113,7 @@ function createIntern() {
       validate: validateInput,
     },
     {
-      name: "officeNumber",
+      name: "school",
       message: "Please enter their School.",
       validate: validateInput,
     },
