@@ -2,7 +2,7 @@
 
 ### View project [here](https://sam-xander.github.io/node-team-generator/)
 
-This is a team profile generation app that uses Node.js to create a team page with data input by the user. The app uses the FS and Path modules in Node.js.
+This is a team profile generation app that uses Node.js to create a team page with data input by the user. The app uses Inquirer to prompt the user and the FS and Path modules in Node.js to generate the page.
 
 ---
 

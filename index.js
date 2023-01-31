@@ -1,17 +1,17 @@
-const Manager = require("./lib/Manager");
-const Engineer = require("./lib/Engineer");
-const Intern = require("./lib/Intern");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
 
+const Manager = require("./lib/Manager");
+const Engineer = require("./lib/Engineer");
+const Intern = require("./lib/Intern");
+const render = require("./src/page-template.js");
+
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
-
-const render = require("./src/page-template.js");
 const team = [];
 
-// TODO: Write Code to gather information about the development team members, and render the HTML file.
+// Helper function to validate inquirer prompts
 function validateInput(value) {
   if (!value) {
     return "This field is required.";
@@ -19,7 +19,8 @@ function validateInput(value) {
   return true;
 }
 
-function generateManager() {
+// Generates the Manager object from user inputs
+function createManager() {
   const prompts = [
     {
       name: "name",
@@ -58,7 +59,8 @@ function generateManager() {
   });
 }
 
-function generateEngineer() {
+// Generates the Engineer object from user inputs
+function createEngineer() {
   const prompts = [
     {
       name: "name",
@@ -92,7 +94,8 @@ function generateEngineer() {
   });
 }
 
-function generateIntern() {
+// Generates the Intern object from user inputs
+function createIntern() {
   const prompts = [
     {
       name: "name",
@@ -126,6 +129,7 @@ function generateIntern() {
   });
 }
 
+// Displays a list of options to continue or exit the app -> then checks user choice
 function showMainMenu() {
   inquirer
     .prompt({
@@ -148,34 +152,33 @@ function showMainMenu() {
       ],
     })
     .then((choice) => {
-      if (choice.option === "engineer") return generateEngineer();
-      if (choice.option === "intern") return generateIntern();
+      if (choice.option === "engineer") return createEngineer();
+      if (choice.option === "intern") return createIntern();
 
       generatePage();
     });
 }
 
+// Checks for output directory -> then writes to team.html file (fs methods run synchronously)
 function generatePage() {
-  render(team);
-  process.exit();
+  if (!fs.existsSync(OUTPUT_DIR)) {
+    fs.mkdirSync(OUTPUT_DIR);
+  }
+
+  fs.writeFileSync(outputPath, render(team), (error) => {
+    if (error) throw error;
+
+    console.log(
+      "---\nThe team profile generated successfully!\n---\nThanks for using the App!"
+    );
+  });
 }
 
+// Initiates the app by prompting the user to create the team manager object
 function init() {
-  console.log("--- Welcome to the Team Management App! ---");
+  console.log("---\nWelcome to the Team Management App!\n---");
 
-  generateManager();
+  createManager();
 }
 
 init();
-
-// function prompt() {
-//   return new Promise((resolve) => {
-//     setTimeout(() => {
-//       resolve("All good!");
-//     }, 3000);
-//   });
-// }
-
-// const data = prompt();
-
-// data.then((data) => console.log(data));
