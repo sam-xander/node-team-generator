@@ -6,6 +6,10 @@ This is a team profile generation app that uses Node.js to create a team page wi
 
 ---
 
+![](./src/node-team-generator-screenshot.jpg)
+
+---
+
 ### Installation
  
  1. Clone the repository from [here](https://github.com/sam-xander/node-team-generator/) to your local drive.
